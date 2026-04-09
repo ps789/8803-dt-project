@@ -21,6 +21,10 @@ from rebound_simulator import (
 
 
 def main() -> None:
+    total_simulations = 100000
+    batch_size = 10000
+    n_jobs = 10
+
     # Notebook cell 4
     sim = rebound.Simulation()
     sim.units = ("AU", "yr", "Msun")
@@ -44,21 +48,26 @@ def main() -> None:
         high=torch.tensor([10, 10, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10]),
     )
 
-    # Notebook cell 9
-    all_params = prior.sample((100000,)).numpy()
-    results = Parallel(n_jobs=10, backend="multiprocessing", verbose=10)(
-        delayed(simulator_single)(all_params[i]) for i in tqdm(range(100000))
-    )
-
-    theta = torch.tensor(all_params, dtype=torch.float32)
-    x = torch.from_numpy(np.stack(results).astype(np.float32))
-
-    # Notebook cell 10
+    # Notebook cells 9-10
     data_dir = Path("data")
     data_dir.mkdir(exist_ok=True)
-    np.save(data_dir / "theta.npy", theta, allow_pickle=True)
-    np.save(data_dir / "x.npy", x, allow_pickle=True)
 
+    for batch_index, start in enumerate(range(0, total_simulations, batch_size)):
+        current_batch_size = min(batch_size, total_simulations - start)
+        all_params = prior.sample((current_batch_size,)).numpy()
+        results = Parallel(n_jobs=n_jobs, backend="multiprocessing", verbose=10)(
+            delayed(simulator_single)(all_params[i])
+            for i in tqdm(range(current_batch_size), desc=f"batch {batch_index}")
+        )
+
+        theta = torch.tensor(all_params, dtype=torch.float32)
+        x = torch.from_numpy(np.stack(results).astype(np.float32))
+        np.save(data_dir / f"theta_batch_{batch_index:02d}.npy", theta, allow_pickle=True)
+        np.save(data_dir / f"x_batch_{batch_index:02d}.npy", x, allow_pickle=True)
+        print(
+            f"Saved batch {batch_index:02d}: "
+            f"{current_batch_size} simulations to {data_dir}"
+        )
 
 
 if __name__ == "__main__":
