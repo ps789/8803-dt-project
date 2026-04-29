@@ -1,0 +1,58 @@
+{
+  "theta_shape": [
+    89714,
+    12
+  ],
+  "x_shape": [
+    89714,
+    15
+  ],
+  "validation_theta_shape": [
+    9947,
+    12
+  ],
+  "validation_x_shape": [
+    9947,
+    15
+  ],
+  "prior_low": [
+    0.10000000149011612,
+    0.0,
+    0.10000000149011612,
+    0.0,
+    0.10000000149011612,
+    0.0,
+    0.10000000149011612,
+    0.0,
+    0.10000000149011612,
+    0.0,
+    0.10000000149011612,
+    0.0
+  ],
+  "prior_high": [
+    5.0,
+    10.0,
+    5.0,
+    10.0,
+    5.0,
+    10.0,
+    5.0,
+    10.0,
+    5.0,
+    10.0,
+    5.0,
+    10.0
+  ],
+  "seed": 0,
+  "learning_rate": 0.0005,
+  "batch_size": 512,
+  "validation_fraction": 0.1,
+  "stop_after_epochs": 50,
+  "max_num_epochs": 500,
+  "cm_n_layers": 8,
+  "cm_hidden_size": 128,
+  "cm_dropout_rate": 0.2,
+  "cm_t_min": 0.001,
+  "cm_t_max": 50.0,
+  "cm_sigma_data": 1.0
+}

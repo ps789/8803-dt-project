@@ -23,7 +23,7 @@ def simulate(
     vy2,
     y3,
     vy3,
-    t_end: float = 1.0,
+    t_end: float = 5.0,
 ):
     sim = rebound.Simulation()
     sim.add(m=m1, x=x1, vx=vx1, y=y1, vy=vy1)
